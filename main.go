@@ -1,33 +1,45 @@
 package main
 
 import (
-	"log"
-	"net/http"
-	"os"
+	"context"
+	"database/sql"
+	"fmt"
+	"time"
 
-	"github.com/gin-gonic/gin"
+	"github.com/EDDYCJY/go-gin-example/routers"
+	_ "github.com/go-sql-driver/mysql"
+	"tsmc.com/go-gin-docker/repository"
 )
 
-func main() {
-	port := os.Getenv("PORT")
+func DBConnection() (db *sql.DB) {
+	// service_url := "oracle://GA731852:uwygnnr2@192.168.1.114:1521/ORCLCDB.localdomain"
+	db, err := sql.Open("mysql", "root:usbw@tcp(192.168.1.105:3306)/classicmodels")
+	if err != nil {
+		fmt.Println("1err", err)
+	}
+	return db
+}
 
-	if port == "" {
-		port = "8000"
-		log.Printf("Defaulting to port %s", port)
+func main() {
+
+	mariaDB := DBConnection()
+	defer mariaDB.Close()
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Minute)
+	defer cancel()
+
+	mariaRepo := repository.NewMariaRepository(mariaDB)
+	res, err := mariaRepo.GetCustomers(ctx)
+	if err != nil {
+		fmt.Println(err)
 	}
 
-	// Starts a new Gin instance with no middle-ware
-	r := gin.New()
-
-	// Define handlers
-	r.GET("/", func(c *gin.Context) {
-		c.String(http.StatusOK, "Hello World!")
-	})
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(http.StatusOK, "pong")
-	})
-
-	// Listen and serve on defined port
-	log.Printf("Listening on port %s", port)
-	r.Run(":" + port)
+	for _, v := range res {
+		fmt.Println(v)
+	}
+	// port := os.Getenv("PORT")
+	routersInit := routers.InitRouter()
+	readTimeout := 60 * time.Second
+	writeTimeout := 60 * time.Second
+	endPoint := "8000"
+	maxHeaderBytes := 1 << 20
 }
