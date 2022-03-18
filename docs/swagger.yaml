@@ -1,13 +1,44 @@
+definitions:
+  domain.Customers:
+    properties:
+      address:
+        $ref: '#/definitions/sql.NullString'
+      name:
+        $ref: '#/definitions/sql.NullString'
+      phone:
+        $ref: '#/definitions/sql.NullString'
+    type: object
+  sql.NullString:
+    properties:
+      string:
+        type: string
+      valid:
+        description: Valid is true if String is not NULL
+        type: boolean
+    type: object
 host: localhost:8080
 info:
   contact:
-    name: nathan.lu
-    url: https://tedmax100.github.io/
+    name: tlchoud
+    url: test
   description: Gin swagger
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   title: Gin swagger
   version: "1.0"
-paths: {}
+paths:
+  /api/v1/customers:
+    get:
+      description: get Customers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Customers'
+      summary: List Customers
+      tags:
+      - Customers
 swagger: "2.0"

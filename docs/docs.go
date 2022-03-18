@@ -11,8 +11,8 @@ const docTemplate = `{
         "description": "{{escape .Description}}",
         "title": "{{.Title}}",
         "contact": {
-            "name": "nathan.lu",
-            "url": "https://tedmax100.github.io/"
+            "name": "tlchoud",
+            "url": "test"
         },
         "license": {
             "name": "Apache 2.0",
@@ -22,7 +22,56 @@ const docTemplate = `{
     },
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
-    "paths": {}
+    "paths": {
+        "/api/v1/customers": {
+            "get": {
+                "description": "get Customers",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "List Customers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Customers"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.Customers": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/sql.NullString"
+                },
+                "name": {
+                    "$ref": "#/definitions/sql.NullString"
+                },
+                "phone": {
+                    "$ref": "#/definitions/sql.NullString"
+                }
+            }
+        },
+        "sql.NullString": {
+            "type": "object",
+            "properties": {
+                "string": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if String is not NULL",
+                    "type": "boolean"
+                }
+            }
+        }
+    }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it

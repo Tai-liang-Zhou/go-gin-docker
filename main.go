@@ -15,24 +15,24 @@ import (
 
 func DBConnection() (db *sql.DB) {
 	// service_url := "oracle://GA731852:uwygnnr2@192.168.1.114:1521/ORCLCDB.localdomain"
-	db, err := sql.Open("mysql", "root:test@tcp(localhost:3306)/classicmodels")
+	db, err := sql.Open("mysql", "root:usbw@tcp(localhost:3306)/classicmodels")
 	if err != nil {
 		fmt.Println("1err", err)
 	}
 	return db
 }
 
-// @title Gin swagger
-// @version 1.0
-// @description Gin swagger
+// @title        Gin swagger
+// @version      1.0
+// @description  Gin swagger
 
-// @contact.name tlchoud
-// @contact.url test
+// @contact.name  tlchoud
+// @contact.url   test
 
-// @license.name Apache 2.0
-// @license.url http://www.apache.org/licenses/LICENSE-2.0.html
+// @license.name  Apache 2.0
+// @license.url   http://www.apache.org/licenses/LICENSE-2.0.html
 
-// @host localhost:8080
+// @host  localhost:8080
 // schemes http
 func main() {
 
@@ -42,9 +42,8 @@ func main() {
 	mariaRepo := repository.NewMariaRepository(mariaDB)
 
 	r := gin.Default()
-	// gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.ReleaseMode)
 	routers.NewMariaRouter(r, mariaRepo)
-	//TODO: add mariadb resource to mac
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080")
 }
