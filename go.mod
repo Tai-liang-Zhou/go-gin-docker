@@ -9,7 +9,6 @@ require (
 	github.com/mailru/easyjson v0.7.7 // indirect
 	github.com/swaggo/gin-swagger v1.4.1
 	github.com/swaggo/swag v1.8.0
-	github.com/urfave/cli/v2 v2.4.0 // indirect
 	golang.org/x/net v0.0.0-20220225172249-27dd8689420f // indirect
 	golang.org/x/sys v0.0.0-20220318055525-2edf467146b5 // indirect
 	golang.org/x/tools v0.1.10 // indirect
