@@ -1,0 +1,67 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Gin swagger",
+        "title": "Gin swagger",
+        "contact": {
+            "name": "tlchoud",
+            "url": "test"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8080",
+    "paths": {
+        "/api/v1/customers": {
+            "get": {
+                "description": "get Customers",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "List Customers",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/domain.Customers"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "domain.Customers": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "$ref": "#/definitions/sql.NullString"
+                },
+                "name": {
+                    "$ref": "#/definitions/sql.NullString"
+                },
+                "phone": {
+                    "$ref": "#/definitions/sql.NullString"
+                }
+            }
+        },
+        "sql.NullString": {
+            "type": "object",
+            "properties": {
+                "string": {
+                    "type": "string"
+                },
+                "valid": {
+                    "description": "Valid is true if String is not NULL",
+                    "type": "boolean"
+                }
+            }
+        }
+    }
+}
