@@ -37,6 +37,7 @@ func (m *mariaRepo) GetCustomers(ctx context.Context) (customer []*domain.Custom
 			&rowData.Name,
 			&rowData.Phone,
 			&rowData.Address,
+			&rowData.CreateTime,
 		)
 		if err != nil {
 			return nil, err

@@ -6,9 +6,10 @@ import (
 )
 
 type Customers struct {
-	Name    sql.NullString
-	Phone   sql.NullString
-	Address sql.NullString
+	Name       sql.NullString
+	Phone      sql.NullString
+	Address    sql.NullString
+	CreateTime sql.NullTime
 }
 
 type MariaRepository interface {

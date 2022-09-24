@@ -6,8 +6,10 @@ import (
 	"errors"
 	"reflect"
 	"testing"
+	"time"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"gopkg.in/guregu/null.v4"
 	"tsmc.com/go-gin-docker/domain"
 )
 
@@ -30,21 +32,34 @@ func Test_mariaRepo_GetCustomers(t *testing.T) {
 			args: args{context.TODO()},
 			beforTest: func(mockSQL sqlmock.Sqlmock) {
 				rows := mockSQL.
-					NewRows([]string{"customerName", "phone", "addressLine1"}).
-					AddRow("tlchoud", "0912345678", "kaohsiung")
+					NewRows([]string{"customerName", "phone", "addressLine1", "create_time"}).
+					AddRow("tlchoud", "0912345678", "kaohsiung", time.Date(2022, 9, 24, 12, 0, 0, 0, time.UTC))
 				prep := mockSQL.ExpectPrepare("SELECT customerName,phone,addressLine1 FROM classicmodels.customers")
 				prep.ExpectQuery().WillReturnRows(rows)
 
 			},
-			wantCustomer: []*domain.Customers{{Name: sql.NullString{String: "tlchoud", Valid: true},
-				Phone:   sql.NullString{String: "0912345678", Valid: true},
-				Address: sql.NullString{String: "kaohsiung", Valid: true}}},
+			wantCustomer: []*domain.Customers{
+				{
+					Name:       null.StringFrom("tlchoud").NullString,
+					Phone:      null.StringFrom("0912345678").NullString,
+					Address:    null.StringFrom("kaohsiung").NullString,
+					CreateTime: null.TimeFrom(time.Date(2022, 9, 24, 12, 0, 0, 0, time.UTC)).NullTime,
+				},
+			},
 			wantErr: false},
 		{name: "response error",
 			args: args{context.TODO()},
 			beforTest: func(mockSQL sqlmock.Sqlmock) {
 				prep := mockSQL.ExpectPrepare("SELECT customerName,phone,addressLine1 FROM classicmodels.customers")
 				prep.ExpectQuery().WillReturnError(errors.New("reponse err"))
+
+			},
+			wantErr: true},
+		{name: "No any row response",
+			args: args{context.TODO()},
+			beforTest: func(mockSQL sqlmock.Sqlmock) {
+				prep := mockSQL.ExpectPrepare("SELECT customerName,phone,addressLine1 FROM classicmodels.customers")
+				prep.ExpectQuery().WillReturnError(sql.ErrNoRows)
 
 			},
 			wantErr: true},
@@ -68,26 +83,6 @@ func Test_mariaRepo_GetCustomers(t *testing.T) {
 			}
 			if !reflect.DeepEqual(gotCustomer, tt.wantCustomer) {
 				t.Errorf("mariaRepo.GetCustomers() = %v, want %v", gotCustomer, tt.wantCustomer)
-			}
-		})
-	}
-}
-
-func TestNewMariaRepository(t *testing.T) {
-	type args struct {
-		db *sql.DB
-	}
-	tests := []struct {
-		name string
-		args args
-		want domain.MariaRepository
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := NewMariaRepository(tt.args.db); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewMariaRepository() = %v, want %v", got, tt.want)
 			}
 		})
 	}

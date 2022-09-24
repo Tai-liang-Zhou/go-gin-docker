@@ -52,7 +52,9 @@ func main() {
 	mariaRepo := repository.NewMariaRepository(mariaDB)
 
 	r := gin.Default()
+	r.Use()
 	gin.SetMode(gin.ReleaseMode)
+	
 	routers.NewMariaRouter(r, mariaRepo)
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.Run(":8080")
