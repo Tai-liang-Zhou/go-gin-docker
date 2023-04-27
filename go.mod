@@ -1,4 +1,4 @@
-module tsmc.com/go-gin-docker
+module go-gin-docker
 
 go 1.16
 
